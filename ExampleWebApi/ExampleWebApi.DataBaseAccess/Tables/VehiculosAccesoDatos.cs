@@ -68,5 +68,16 @@ namespace ExampleWebApi.DataBaseAccess.Tables
                 return 0;
             }
         }
+
+        public bool EliminarVehiculo(string placa)
+        {
+            var connection = _manejoVehiculos.OpenConnection();
+            var sqlCommand = new SqlCommand("EliminarVehiculo", connection);
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.Parameters.Add(new SqlParameter("Placa", SqlDbType.NVarChar, 20) { Value = placa });
+            var respuesta = sqlCommand.ExecuteNonQuery();
+
+            return respuesta > 0 ? true : false;
+        }
     }
 }

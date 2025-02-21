@@ -32,7 +32,7 @@ namespace ExampleWebApi.Controllers
         {
             VehiculosAccesoDatos vehiculosAccesoDatos = new VehiculosAccesoDatos();
             var creado = vehiculosAccesoDatos.CrearVehiculo(vehiculo);
-            return creado == 1 ? Ok(new { message = "El vehículo se creo correctamente" }) : StatusCode(500, new { message = "No se pudo crear el vehículo" });
+            return creado == 1 ? Ok(new { mensaje = "El vehículo se creo correctamente" }) : StatusCode(500, new { mensaje = "No se pudo crear el vehículo" });
         }
 
         [HttpPut]
@@ -44,11 +44,12 @@ namespace ExampleWebApi.Controllers
         }
 
         [HttpDelete]
-        public IActionResult EliminarVehiculo(BigInteger idVehiculo)
+        public IActionResult EliminarVehiculo(String placa)
         {
             VehiculosAccesoDatos vehiculosAccesoDatos = new VehiculosAccesoDatos();
-            //vehiculosAccesoDatos.EliminarVehiculo(idVehiculo);
-            return Ok();
+            var respuesta = vehiculosAccesoDatos.EliminarVehiculo(placa);
+            
+            return respuesta ? Ok(new { mensaje = "El vehículo se elimino de forma correcta." }): StatusCode(500, new { mensaje = "No puedes eliminar un vehículo con mantenimiento registrados." });
         }
     }
 }
