@@ -12,4 +12,31 @@ namespace ExampleWebApi.BusinessLogic.Models
         public string Nombre { get; set; }
         public string Apellido { get; set; }
     }
+
+
+    public abstract class Persona
+    {
+        public string Id { get; set; }
+        public abstract string Profesion { get; set; }
+    }
+
+    public class Estudiante : Persona
+    {
+        public string Nombre { get; set; }
+        public override string Profesion { get; set; }
+    }
+
+    public class Empleado : Persona
+    {
+        public override string Profesion { get; set; }
+    }
+
+    public class ProgramaPrincipal
+    {
+        public ProgramaPrincipal()
+        {
+            Persona p = new Empleado();
+            p.Profesion = "Ingeniero";
+        }
+    }
 }

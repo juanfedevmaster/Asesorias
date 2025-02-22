@@ -1,4 +1,5 @@
 ﻿using ExampleWebApi.BusinessLogic.Models;
+using ExampleWebApi.DataBaseAccess.Interfaces;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -6,11 +7,11 @@ namespace ExampleWebApi.DataBaseAccess.Tables
 {
     public class VehiculosAccesoDatos
     {
-        private readonly ManejoVehiculos _manejoVehiculos;
+        private readonly IManejoVehiculos _manejoVehiculos;
 
-        public VehiculosAccesoDatos()
+        public VehiculosAccesoDatos(IManejoVehiculos manejoVehiculos)
         {
-            _manejoVehiculos = new ManejoVehiculos();
+            _manejoVehiculos = manejoVehiculos;
         }
 
         public List<Vehiculo> GetVehiculos(int? tipoVehiculo, string placa, string marca)
@@ -78,6 +79,22 @@ namespace ExampleWebApi.DataBaseAccess.Tables
             var respuesta = sqlCommand.ExecuteNonQuery();
 
             return respuesta > 0 ? true : false;
+        }
+
+        public bool ActualizarVehiculo(Vehiculo vehiculo)
+        {
+            var connection = _manejoVehiculos.OpenConnection();
+            var sqlCommand = new SqlCommand("ActualizarVehiculo", connection);
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.Parameters.Add(new SqlParameter("Placa", SqlDbType.NVarChar, 20) { Value = vehiculo.Placa });
+            sqlCommand.Parameters.Add(new SqlParameter("Año", SqlDbType.Int) { Value = vehiculo.Año });
+            sqlCommand.Parameters.Add(new SqlParameter("ID_Tipo_Vehiculo", SqlDbType.Int) { Value = vehiculo.ID_TipoVehiculo });
+            sqlCommand.Parameters.Add(new SqlParameter("ID_Propietario", SqlDbType.Int) { Value = vehiculo.ID_Propietario });
+            sqlCommand.Parameters.Add(new SqlParameter("ID_Modelo", SqlDbType.Int) { Value = vehiculo.ID_Modelo });
+            
+            var resultado = sqlCommand.ExecuteNonQuery();
+            
+            return resultado > 0 ? true : false;
         }
     }
 }
